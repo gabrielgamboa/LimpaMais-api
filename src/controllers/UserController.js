@@ -1,7 +1,8 @@
+const bcrypt = require("bcrypt");
 const { User } = require("../models");
 
 class UserController {
-    async create(request, response) {
+    async store(request, response) {
         const { name, email, password } = request.body;
 
         try {
@@ -27,10 +28,11 @@ class UserController {
         const { email, password } = request.body;
         
         try {
-            const user = await User.findOne({ where: { email, password } });
+            const user = await User.findOne({ where: { email } });
+            const passwordIsValid = await bcrypt.compare(password, user.password_hash);
 
-            if (!user) 
-                return response.status(400).json({error: "E-mail ou senha incorretos"});
+            if (!user || !passwordIsValid) 
+                return response.status(404).json({error: "E-mail ou senha incorretos"});
 
             return response.json(user);
 
