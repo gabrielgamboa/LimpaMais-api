@@ -1,7 +1,7 @@
 const { User } = require("../models");
 
 class UserController {
-    async createUser(request, response) {
+    async create(request, response) {
         const { name, email, password } = request.body;
 
         try {
