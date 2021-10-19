@@ -5,6 +5,11 @@ class UserController {
         const { name, email, password } = request.body;
 
         try {
+            const userAlreadyExists = await User.findOne({ where: { email } });
+
+            if (userAlreadyExists)
+                return response.status(400).json({ error: "Já existe um usuário cadastrado com este e-mail." });
+
             const user = await User.create({
                 name,
                 email,
@@ -19,4 +24,4 @@ class UserController {
     }
 }
 
-module.exports = UserController;
+module.exports = { UserController };
