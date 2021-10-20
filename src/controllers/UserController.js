@@ -17,7 +17,13 @@ class UserController {
                 password,
             });
 
-            return response.status(201).json(user);
+            const { id, name, email } = user;
+
+            return response.status(201).json({
+                id,
+                name,
+                email
+            });
 
         } catch (error) {
             return response.status(500).send(error);
@@ -26,15 +32,24 @@ class UserController {
 
     async login(request, response) {
         const { email, password } = request.body;
-        
+
         try {
             const user = await User.findOne({ where: { email } });
+
+            if (!user)
+                return response.status(404).json({ error: "E-mail ou senha incorretos" });
+
             const passwordIsValid = await bcrypt.compare(password, user.password_hash);
 
-            if (!user || !passwordIsValid) 
-                return response.status(404).json({error: "E-mail ou senha incorretos"});
+            if (!passwordIsValid)
+                return response.status(404).json({ error: "E-mail ou senha incorretos" });
 
-            return response.json(user);
+
+            return response.json({
+                id: user.id,
+                name: user.name,
+                email: user.email
+            });
 
         } catch (error) {
             return response.status(500).send(error);
