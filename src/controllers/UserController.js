@@ -3,27 +3,23 @@ const { User } = require("../models");
 
 class UserController {
     async store(request, response) {
-        const { name, email, password } = request.body;
+        const { name, email, phone, password } = request.body;
 
         try {
+
             const userAlreadyExists = await User.findOne({ where: { email } });
 
             if (userAlreadyExists)
                 return response.status(400).json({ error: "Já existe um usuário cadastrado com este e-mail." });
 
-            const user = await User.create({
+            await User.create({
                 name,
                 email,
+                phone,
                 password,
             });
 
-            const { id, name, email } = user;
-
-            return response.status(201).json({
-                id,
-                name,
-                email
-            });
+            return response.status(201).send();
 
         } catch (error) {
             return response.status(500).send(error);
@@ -48,7 +44,8 @@ class UserController {
             return response.json({
                 id: user.id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                phone: user.phone
             });
 
         } catch (error) {

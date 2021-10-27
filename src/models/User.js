@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING(80),
                 allowNull: false
               },
+              phone: {
+                type: DataTypes.STRING(20),
+                allowNull: false
+              },
               password: {
                 type: DataTypes.VIRTUAL,
               },

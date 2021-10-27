@@ -1,18 +1,21 @@
-require('dotenv').config({
-    path: process.env.NODE_ENV.trim() === "dev" ? ".env.dev" : ".env"
-})
+require('dotenv').config();
 
-const dialectOptions = {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-}
+// require('dotenv').config({
+//     path: process.env.NODE_ENV.trim() === "dev" ? ".env.dev" : ".env"
+// })
+
+// const dialectOptions = {
+//     ssl: {
+//       require: true,
+//       rejectUnauthorized: false
+//     }
+// }
 
 module.exports = {
     dialect: 'postgres',
     protocol: 'postgres',
-    dialectOptions: process.env.NODE_ENV.trim() === "dev" ? null : dialectOptions,
+    dialectOptions: null,
+    // dialectOptions: process.env.NODE_ENV.trim() === "dev" ? null : dialectOptions,
     host: process.env.DATABASE_HOST,
     username: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
