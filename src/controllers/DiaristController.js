@@ -29,7 +29,11 @@ class DiaristController {
     }
 
     async list(request, response) {
+        const diarists = await Diarist.findAll({
+            attributes: ["name", "email", "phone", "daily_rate", "note"]
+        });
 
+        return response.json(diarists);
     }
 }
 
