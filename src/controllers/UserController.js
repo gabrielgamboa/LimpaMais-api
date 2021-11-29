@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 const { User } = require("../models");
 
 class UserController {
-    async store(request, response) {
+    async create(request, response) {
         const { name, email, phone, password } = request.body;
 
         try {
