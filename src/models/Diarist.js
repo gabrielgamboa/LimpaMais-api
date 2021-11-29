@@ -22,6 +22,22 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING(20),
                 allowNull: false
               },
+              street: {
+                type: DataTypes.STRING(80),
+                allowNull: false,
+              },
+              number: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+              },
+              city: {
+                type: DataTypes.STRING(40),
+                allowNull: false,
+              },
+              state: {
+                type: DataTypes.STRING(40),
+                allowNull: false,
+              },
               daily_rate: {
                 type: DataTypes.DOUBLE,
                 allowNull: false

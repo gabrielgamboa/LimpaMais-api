@@ -3,10 +3,9 @@ const { User } = require("../models");
 
 class UserController {
     async create(request, response) {
-        const { name, email, phone, password } = request.body;
+        const { name, email, password, phone, street, number, city, state } = request.body;
 
         try {
-
             const userAlreadyExists = await User.findOne({ where: { email } });
 
             if (userAlreadyExists)
@@ -16,6 +15,10 @@ class UserController {
                 name,
                 email,
                 phone,
+                street,
+                number,
+                city,
+                state,
                 password,
             });
 
