@@ -6,6 +6,7 @@ const diaristsRoutes = Router();
 const diaristsController = new DiaristController();
 
 diaristsRoutes.get("/list", diaristsController.list);
+diaristsRoutes.get("/result", diaristsController.result);
 diaristsRoutes.post("/create", diaristsController.create);
 
 module.exports = { diaristsRoutes };

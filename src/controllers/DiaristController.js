@@ -35,6 +35,12 @@ class DiaristController {
 
         return response.json(diarists);
     }
+
+    async result(request, response) {
+        const result = await Diarist.count();
+        console.log(result)
+        return response.json(result);
+    }
 }
 
 module.exports = { DiaristController }
