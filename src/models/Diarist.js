@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 
 module.exports = (sequelize, DataTypes) => {
     const Diarist = sequelize.define(
-        'Diarist',
+        "Diarist",
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -64,7 +64,11 @@ module.exports = (sequelize, DataTypes) => {
             }
           }
         }
-    )
+    );
+
+    Diarist.associate = (models) => {
+      Diarist.hasMany(models.Service, { as: "service", foreignKey: "diarist_id" });
+    }
 
     return Diarist
 }
