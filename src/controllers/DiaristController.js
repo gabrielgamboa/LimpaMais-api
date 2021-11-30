@@ -3,7 +3,7 @@ const { Diarist } = require("../models");
 
 class DiaristController {
     async create(request, response) {
-        const { name, email, phone, daily_rate, note, password } = request.body;
+        const { name, email, password, phone, street, number, city, state, daily_rate, note } = request.body;
 
         try {
             const diaristAlreadyExists = await Diarist.findOne({ where: { email } });
@@ -14,10 +14,14 @@ class DiaristController {
             await Diarist.create({
                 name,
                 email,
+                password,
+                street,
+                number,
+                city,
+                state,
                 phone,
                 daily_rate,
                 note,
-                password,
             });
 
             return response.status(201).send();
@@ -30,7 +34,7 @@ class DiaristController {
 
     async list(request, response) {
         const diarists = await Diarist.findAll({
-            attributes: ["name", "email", "phone", "daily_rate", "note"]
+            attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
         });
 
         return response.json(diarists);
