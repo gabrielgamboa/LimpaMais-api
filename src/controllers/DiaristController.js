@@ -33,6 +33,17 @@ class DiaristController {
     }
 
     async list(request, response) {
+        const { city } = request.query;
+
+        if(city) {
+            const diaristsByCity = await Diarist.findAll({
+                where: { city },
+                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
+            });
+
+            return response.json(diaristsByCity);
+        }
+
         const diarists = await Diarist.findAll({
             attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
         });
@@ -42,7 +53,6 @@ class DiaristController {
 
     async result(request, response) {
         const result = await Diarist.count();
-        console.log(result)
         return response.json(result);
     }
 }

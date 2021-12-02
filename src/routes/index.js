@@ -10,4 +10,4 @@ routes.use("/users", usersRoutes);
 routes.use("/diarists", diaristsRoutes);
 routes.use("/services", servicesRoutes);
 
-module.exports = routes;
+module.exports = { routes };
