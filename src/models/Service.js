@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     Service.associate = (models) => {
         Service.belongsTo(models.User, { as: "user", foreignKey: "user_id" });
         Service.belongsTo(models.Diarist, { as: "diarist", foreignKey: "diarist_id"});
-        //falta associação de avaliação
+        Service.hasMany(models.Rating, { as: "rating", foreignKey: "service_id"});
     }
 
     return Service;
