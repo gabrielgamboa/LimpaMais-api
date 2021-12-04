@@ -32,10 +32,29 @@ class DiaristController {
         }
     }
 
+    async find(request, response) {
+        const { id } = request.params;
+
+        try {
+
+            const diarist = await Diarist.findOne({
+                where: { id }
+            });
+
+            if (!diarist) return response.status(400).json({ error: "Diarista não encontrada" });
+
+            return response.json(diarist);
+
+        } catch (error) {
+            console.log(error);
+            return response.status(500).send(error);
+        }
+    }
+
     async list(request, response) {
         const { city } = request.query;
 
-        if(city) {
+        if (city) {
             const diaristsByCity = await Diarist.findAll({
                 where: { city },
                 attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
@@ -51,7 +70,7 @@ class DiaristController {
         return response.json(diarists);
     }
 
-    async result(request, response) {
+    async count(request, response) {
         const result = await Diarist.count();
         return response.json(result);
     }
