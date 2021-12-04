@@ -1,12 +1,13 @@
-const { Rating, Service } = require("../models");
+const { Rating, Service, User, Diarist } = require("../models");
 
 class RatingController {
     async create(request, response) {
-        const { service_id, rate, description } = request.body;
+        const { rate, description } = request.body;
+        const { id } = request.params;
 
         try {
             await Rating.create({
-                service_id,
+                service_id: id,
                 rate,
                 description
             });
@@ -19,19 +20,32 @@ class RatingController {
 
     }
 
-    async find(request, response) {
+    async findByServiceId(request, response) {
         const { id } = request.params;
 
-        const ratings = await Rating.findOne({
-            where: { id },
+        const rating = await Rating.findOne({
             include: [
                 {
+                    where: { id },
                     model: Service,
                     as: "service",
+                    include: [
+                        {
+                            model: User,
+                            as: "user",
+                            attributes: ["name", "email", "phone", "street", "number", "city", "state"]
+                        },
+                        {
+                            model: Diarist,
+                            as: "diarist",
+                            attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                        }
+                    ],
                 }
             ]
         });
-        return response.json(ratings)
+
+        return response.json(rating);
     }
 }
 
