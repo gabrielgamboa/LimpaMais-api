@@ -38,7 +38,8 @@ class DiaristController {
         try {
 
             const diarist = await Diarist.findOne({
-                where: { id }
+                where: { id },
+                attributes: { exclude: ["password_hash"]}
             });
 
             if (!diarist) return response.status(400).json({ error: "Diarista não encontrada" });
