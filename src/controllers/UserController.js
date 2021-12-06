@@ -74,6 +74,29 @@ class UserController {
             return response.status(500).send(error);
         }
     }
+
+    async update(request, response) {
+        const { id } = request.params;
+        const { name, email, password, phone, street, number, city, state } = request.body;
+
+        const user = await User.findOne({ where: { id }});
+
+        if (!user) return response.status(404).json({error: "Usuário não encontrado"});
+
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (password) user.password = password;
+        if (phone) user.phone = phone;
+        if (street) user.street = street;
+        if (number) user.number = number;
+        if (city) user.city = city;
+        if (state) user.state = state;
+
+        await user.save();
+
+        return response.json(user);
+        
+    }
 }
 
 module.exports = { UserController };
