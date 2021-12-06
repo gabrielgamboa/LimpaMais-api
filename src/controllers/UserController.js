@@ -29,6 +29,25 @@ class UserController {
         }
     }
 
+    async find(request, response) {
+        const { id } = request.params;
+
+        try {
+            const user = await User.findOne({ 
+                where: { id },
+                attributes: { exclude: ["password_hash"]} 
+            });
+
+            if (!user) {
+                return response.status(400).json({ error: "Usuário não encontrado" });
+            }
+
+            return response.json(user);
+        } catch (error) {
+
+        }
+    }
+
     async login(request, response) {
         const { email, password } = request.body;
 
