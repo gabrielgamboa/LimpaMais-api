@@ -24,11 +24,13 @@ class RatingController {
         const { id } = request.params;
 
         const rating = await Rating.findOne({
+            attributes: { exclude: ["service_id"]}, 
             include: [
                 {
                     where: { id },
                     model: Service,
                     as: "service",
+                    attributes: { exclude: ["user_id", "diarist_id"]}, 
                     include: [
                         {
                             model: User,

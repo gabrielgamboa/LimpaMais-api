@@ -25,6 +25,7 @@ class ServiceController {
         try {
             const service = await Service.findOne({
                 where: { id },
+                attributes: { exclude: ["user_id", "diarist_id"]}, //COLOCAR EXCLUDE NO RATING TBM
                 include: [
                     {
                         model: User,
