@@ -56,7 +56,7 @@ class DiaristController {
         const { id } = request.params;
 
         try {
-            const service = await Service.findAll({
+            const services = await Service.findAll({
                 where: { diarist_id: id},
                 attributes: { exclude: ["user_id", "diarist_id"]},
                 include: [
@@ -68,8 +68,7 @@ class DiaristController {
                 ]
             });
 
-            return response.json(service);
-
+            return response.json(services);
 
         } catch (error) {
             console.log(error)
