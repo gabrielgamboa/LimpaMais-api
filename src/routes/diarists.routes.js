@@ -8,6 +8,7 @@ const diaristsController = new DiaristController();
 diaristsRoutes.post("/", diaristsController.create);
 diaristsRoutes.get("/", diaristsController.list);
 diaristsRoutes.get("/:id", diaristsController.find);
+diaristsRoutes.get("/:id/services", diaristsController.findServicesByDiaristId);
 diaristsRoutes.patch("/:id", diaristsController.update);
 
 module.exports = { diaristsRoutes };

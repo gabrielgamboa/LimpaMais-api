@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Diarist } = require("../models");
+const { Diarist, User, Service } = require("../models");
 
 class DiaristController {
     async create(request, response) {
@@ -52,6 +52,30 @@ class DiaristController {
         }
     }
 
+    async findServicesByDiaristId(request, response) {
+        const { id } = request.params;
+
+        try {
+            const service = await Service.findAll({
+                where: { diarist_id: id},
+                attributes: { exclude: ["user_id", "diarist_id"]},
+                include: [
+                    {
+                        model: User,
+                        as: "user",
+                        attributes: ["name", "email", "phone", "street", "number", "city", "state"]
+                    },
+                ]
+            });
+
+            return response.json(service);
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async list(request, response) {
         const { city } = request.query;
 
@@ -69,11 +93,6 @@ class DiaristController {
         });
 
         return response.json(diarists);
-    }
-
-    async count(request, response) {
-        const result = await Diarist.count();
-        return response.json(result);
     }
 
     async update(request, response) {
