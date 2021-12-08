@@ -39,7 +39,7 @@ class DiaristController {
 
             const diarist = await Diarist.findOne({
                 where: { id },
-                attributes: { exclude: ["password_hash"]}
+                attributes: { exclude: ["password_hash"] }
             });
 
             if (!diarist) return response.status(400).json({ error: "Diarista não encontrada" });
@@ -57,8 +57,8 @@ class DiaristController {
 
         try {
             const services = await Service.findAll({
-                where: { diarist_id: id},
-                attributes: { exclude: ["user_id", "diarist_id"]},
+                where: { diarist_id: id },
+                attributes: { exclude: ["user_id", "diarist_id"] },
                 include: [
                     {
                         model: User,
@@ -76,31 +76,50 @@ class DiaristController {
     }
 
     async list(request, response) {
-        const { city } = request.query;
+        const { city, sort } = request.query;
 
-        if (city) {
+        if (city && sort) {
+            const diaristsByCityAndSort = await Diarist.findAll({
+                where: { city },
+                order: [["daily_rate", sort]],
+                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
+            });
+
+            return response.json(diaristsByCityAndSort);
+
+        } else if (city) {
             const diaristsByCity = await Diarist.findAll({
                 where: { city },
                 attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
             });
 
             return response.json(diaristsByCity);
+
+        } else if (sort) {
+            const diaristsBySort = await Diarist.findAll({
+                where: { city },
+                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
+            });
+
+            return response.json(diaristsBySort);
+
+        } else {
+            const diarists = await Diarist.findAll({
+                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+            });
+
+            return response.json(diarists);
+
         }
-
-        const diarists = await Diarist.findAll({
-            attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
-        });
-
-        return response.json(diarists);
     }
 
     async update(request, response) {
         const { id } = request.params;
         const { name, email, password, phone, street, number, city, state, daily_rate, note } = request.body;
 
-        const diarist = await Diarist.findOne({ where: { id }});
+        const diarist = await Diarist.findOne({ where: { id } });
 
-        if (!diarist) return response.status(404).json({error: "Usuário não encontrado"});
+        if (!diarist) return response.status(404).json({ error: "Usuário não encontrado" });
 
         if (name) diarist.name = name;
         if (email) diarist.email = email;
@@ -116,7 +135,7 @@ class DiaristController {
         await diarist.save();
 
         return response.json(diarist);
-        
+
     }
 }
 
