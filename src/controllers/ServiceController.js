@@ -30,12 +30,12 @@ class ServiceController {
                     {
                         model: User,
                         as: "user",
-                        attributes: ["name", "email", "phone", "street", "number", "city", "state"]
+                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state"]
                     },
                     {
                         model: Diarist,
                         as: "diarist",
-                        attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
                     }
                 ]
             });

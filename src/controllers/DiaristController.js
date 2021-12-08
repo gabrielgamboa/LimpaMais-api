@@ -63,7 +63,7 @@ class DiaristController {
                     {
                         model: User,
                         as: "user",
-                        attributes: ["name", "email", "phone", "street", "number", "city", "state"]
+                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state"]
                     },
                 ]
             });
@@ -78,39 +78,15 @@ class DiaristController {
     async list(request, response) {
         const { city, sort } = request.query;
 
-        if (city && sort) {
-            const diaristsByCityAndSort = await Diarist.findAll({
-                where: { city },
-                order: [["daily_rate", sort]],
-                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
-            });
+        const query = { 
+            attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"] 
+        };
 
-            return response.json(diaristsByCityAndSort);
+        if (city) query.where = { city };
+        if (sort) query.order = [["daily_rate", sort]];
 
-        } else if (city) {
-            const diaristsByCity = await Diarist.findAll({
-                where: { city },
-                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
-            });
-
-            return response.json(diaristsByCity);
-
-        } else if (sort) {
-            const diaristsBySort = await Diarist.findAll({
-                where: { city },
-                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"],
-            });
-
-            return response.json(diaristsBySort);
-
-        } else {
-            const diarists = await Diarist.findAll({
-                attributes: ["name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
-            });
-
-            return response.json(diarists);
-
-        }
+        const diarists = await Diarist.findAll(query);
+        return response.json(diarists);
     }
 
     async update(request, response) {
