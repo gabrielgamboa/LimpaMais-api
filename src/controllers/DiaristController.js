@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { Diarist, User, Service } = require("../models");
+const { Diarist, User, Service, Rating} = require("../models");
 
 class DiaristController {
     async create(request, response) {
@@ -39,7 +39,19 @@ class DiaristController {
 
             const diarist = await Diarist.findOne({
                 where: { id },
-                attributes: { exclude: ["password_hash"] }
+                attributes: { exclude: ["password_hash"] },
+                include: [
+                    {
+                        model: Service,
+                        as: "service",
+                        include: [
+                            {
+                                model: Rating,
+                                as: "rating"
+                            }
+                        ]
+                    }
+                ]
             });
 
             if (!diarist) return response.status(400).json({ error: "Diarista não encontrada" });
@@ -50,7 +62,7 @@ class DiaristController {
             console.log(error);
             return response.status(500).send(error);
         }
-    } //ver como vai pegar a média dos ratings + os rates
+    }
 
     async findServicesByDiaristId(request, response) {
         const { id } = request.params;
