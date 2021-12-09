@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const { User, Diarist, Service, Rating } = require("../models");
 
 class UserController {
     async create(request, response) {
@@ -96,6 +96,33 @@ class UserController {
 
         return response.json(user);
         
+    }
+
+    async findServicesByUserId(request, response) {
+        const { id } = request.params;
+
+        try {
+            const services = await Service.findAll({
+                where: { user_id: id },
+                include: [
+                    {
+                        model: Diarist,
+                        as: "diarist",
+                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                    },
+                    {
+                        model: Rating,
+                        as: "rating",
+                    }
+                ]
+            });
+
+            return response.json(services);
+
+        } catch (error) {
+            console.log(error);
+            return response.status(500).send(error);
+        }
     }
 }
 

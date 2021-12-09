@@ -50,7 +50,7 @@ class DiaristController {
             console.log(error);
             return response.status(500).send(error);
         }
-    }
+    } //ver como vai pegar a média dos ratings + os rates
 
     async findServicesByDiaristId(request, response) {
         const { id } = request.params;
@@ -63,7 +63,7 @@ class DiaristController {
                     {
                         model: User,
                         as: "user",
-                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state"]
+                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state"]
                     },
                 ]
             });
@@ -78,15 +78,24 @@ class DiaristController {
     async list(request, response) {
         const { city, sort } = request.query;
 
-        const query = { 
-            attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"] 
-        };
+        try {
+            const query = {
+                attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+            };
 
-        if (city) query.where = { city };
-        if (sort) query.order = [["daily_rate", sort]];
+            if (city) query.where = { city };
+            if (sort) query.order = [["daily_rate", sort]];
 
-        const diarists = await Diarist.findAll(query);
-        return response.json(diarists);
+            const diarists = await Diarist.findAll(query);
+
+            if (diarists.length === 0)
+                return response.status(404).json({ error: "Não foi encontrado diaristas" });
+
+            return response.json(diarists);
+
+        } catch (error) {
+            return response.status(500).send(error);
+        }
     }
 
     async update(request, response) {
@@ -95,7 +104,7 @@ class DiaristController {
 
         const diarist = await Diarist.findOne({ where: { id } });
 
-        if (!diarist) return response.status(404).json({ error: "Usuário não encontrado" });
+        if (!diarist) return response.status(404).json({ error: "Diarista não encontrada" });
 
         if (name) diarist.name = name;
         if (email) diarist.email = email;
@@ -113,6 +122,8 @@ class DiaristController {
         return response.json(diarist);
 
     }
+
+
 }
 
 module.exports = { DiaristController }

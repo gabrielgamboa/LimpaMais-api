@@ -9,6 +9,7 @@ usersRoutes.post("/", userController.create);
 usersRoutes.get("/:id", userController.find);
 usersRoutes.post("/login", userController.login);
 usersRoutes.patch("/:id", userController.update);
+usersRoutes.get("/:id/services", userController.findServicesByUserId);
 
 module.exports = { usersRoutes };
 

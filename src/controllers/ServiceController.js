@@ -25,7 +25,6 @@ class ServiceController {
         try {
             const service = await Service.findOne({
                 where: { id },
-                attributes: { exclude: ["user_id", "diarist_id"]},
                 include: [
                     {
                         model: User,

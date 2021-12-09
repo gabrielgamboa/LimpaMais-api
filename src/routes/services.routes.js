@@ -12,6 +12,6 @@ servicesRoutes.post("/", serviceController.create);
 servicesRoutes.get("/:id", serviceController.findServiceById);
 
 servicesRoutes.post("/:id/rating", ratingController.create);
-servicesRoutes.get("/:id/rating", ratingController.findByServiceId);
+servicesRoutes.get("/:id/rating", ratingController.findRatingByServiceId);
 
 module.exports = { servicesRoutes }
