@@ -100,8 +100,6 @@ class DiaristController {
 
             const diarists = await Diarist.findAll(query);
 
-            console.log(city, sort)
-
             if (diarists.length === 0)
                 return response.status(404).json({ error: "Não foi encontrado diaristas" });
 
