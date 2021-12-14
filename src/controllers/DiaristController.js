@@ -100,6 +100,8 @@ class DiaristController {
 
             const diarists = await Diarist.findAll(query);
 
+            console.log(city, sort)
+
             if (diarists.length === 0)
                 return response.status(404).json({ error: "Não foi encontrado diaristas" });
 
@@ -133,6 +135,18 @@ class DiaristController {
 
         return response.json(diarist);
 
+    }
+
+    async upload(request, response) {
+        const { location: url_photo } = request.file;
+        const { id } = request.params;
+
+        await Diarist.update(
+            { url_photo },
+            { where: { id } }
+        );
+
+        return response.status(204).send();
     }
 
 

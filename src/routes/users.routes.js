@@ -13,7 +13,7 @@ usersRoutes.post("/", userController.create);
 usersRoutes.get("/:id", userController.find);
 usersRoutes.post("/login", userController.login);
 usersRoutes.patch("/:id", userController.update);
-usersRoutes.post("/:id", upload.single('file'), userController.upload);
+usersRoutes.patch("/:id/upload", upload.single('file'), userController.upload);
 usersRoutes.get("/:id/services", userController.findServicesByUserId);
 
 module.exports = { usersRoutes };

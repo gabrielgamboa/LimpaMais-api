@@ -6,7 +6,7 @@ module.exports = {
       "users",
       "url_photo",
       {
-        type: Sequelize.STRING(80),
+        type: Sequelize.STRING,
         allowNull: true
       }
     );

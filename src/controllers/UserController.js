@@ -33,9 +33,9 @@ class UserController {
         const { id } = request.params;
 
         try {
-            const user = await User.findOne({ 
+            const user = await User.findOne({
                 where: { id },
-                attributes: { exclude: ["password_hash"]} 
+                attributes: { exclude: ["password_hash"] }
             });
 
             if (!user) {
@@ -79,9 +79,9 @@ class UserController {
         const { id } = request.params;
         const { name, email, password, phone, street, number, city, state } = request.body;
 
-        const user = await User.findOne({ where: { id }});
+        const user = await User.findOne({ where: { id } });
 
-        if (!user) return response.status(404).json({error: "Usuário não encontrado"});
+        if (!user) return response.status(404).json({ error: "Usuário não encontrado" });
 
         if (name) user.name = name;
         if (email) user.email = email;
@@ -95,14 +95,19 @@ class UserController {
         await user.save();
 
         return response.json(user);
-        
+
     }
 
     async upload(request, response) {
-        const { file } = request;
-        console.log(file);
+        const { location: url_photo } = request.file;
+        const { id } = request.params;
 
-        return response.send();
+        await User.update(
+            { url_photo },
+            { where: { id } }
+        );
+
+        return response.status(204).send();
     }
 
     async findServicesByUserId(request, response) {
@@ -115,7 +120,7 @@ class UserController {
                     {
                         model: Diarist,
                         as: "diarist",
-                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
                     },
                     {
                         model: Rating,
