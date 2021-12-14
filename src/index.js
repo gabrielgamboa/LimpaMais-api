@@ -12,3 +12,5 @@ app.use(express.json());
 app.use(routes);
 
 app.listen(process.env.PORT || 3333, () => console.log(`Server is running on port ${process.env.PORT}`));
+
+//CRIAR MIGRATION PRA INSERIR URLPHOTO NA COLUNA DE USUARIO E DIARISTA
