@@ -12,7 +12,8 @@ const userController = new UserController();
 usersRoutes.post("/", userController.create);
 usersRoutes.get("/:id", userController.find);
 usersRoutes.post("/login", userController.login);
-usersRoutes.patch("/:id", upload.single('file'), userController.update);
+usersRoutes.patch("/:id", userController.update);
+usersRoutes.post("/:id", upload.single('file'), userController.upload);
 usersRoutes.get("/:id/services", userController.findServicesByUserId);
 
 module.exports = { usersRoutes };

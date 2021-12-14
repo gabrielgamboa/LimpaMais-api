@@ -92,7 +92,7 @@ class DiaristController {
 
         try {
             const query = {
-                attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note", "url_photo"]
             };
 
             if (city) query.where = { city };

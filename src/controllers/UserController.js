@@ -98,6 +98,13 @@ class UserController {
         
     }
 
+    async upload(request, response) {
+        const { file } = request;
+        console.log(file);
+
+        return response.send();
+    }
+
     async findServicesByUserId(request, response) {
         const { id } = request.params;
 

@@ -43,7 +43,11 @@ module.exports = (sequelize, DataTypes) => {
               },
               password_hash: {
                 type: DataTypes.STRING(80),
-              }
+              },
+              url_photo: {
+                type: DataTypes.STRING(80),
+                allowNull: true,
+              },
         },
         {
           hooks: {
