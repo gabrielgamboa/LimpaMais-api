@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt");
-const { Diarist, User, Service, Rating} = require("../models");
+const {QueryTypes} = require('sequelize');
+
+const db = require("../models");
+const { Diarist, User, Service, Rating } = require("../models");
 
 class DiaristController {
     async create(request, response) {
@@ -33,35 +36,67 @@ class DiaristController {
     }
 
     async find(request, response) {
-        const { id } = request.params;
+        const { id: diarist_id } = request.params;
 
-        try {
+        const diarists = await Diarist.findOne({
+            where: { id: diarist_id },
+            attributes: { exclude: ["password_hash"] },
+            include: [
+                {
+                    model: Service,
+                    as: "services",
+                    include: [
+                        {
+                            model: Rating,
+                            as: "rating"
+                        },
+                        {
+                            model: User,
+                            as: "user",
+                        }
+                    ]
+                }
+            ]
+        });
 
-            const diarist = await Diarist.findOne({
-                where: { id },
-                attributes: { exclude: ["password_hash"] },
-                include: [
-                    {
-                        model: Service,
-                        as: "service",
-                        include: [
-                            {
-                                model: Rating,
-                                as: "rating"
-                            }
-                        ]
-                    }
-                ]
-            });
+        const { services } = diarists;
+        
+        const [averageRateResult] = await db.sequelize.query(`SELECT AVG(R.rate) as average_rate FROM RATINGS R JOIN SERVICES S ON R.service_id = S.id WHERE S.diarist_id = ${diarist_id}`, { type: QueryTypes.SELECT });
+        const { average_rate } = averageRateResult;
 
-            if (!diarist) return response.status(400).json({ error: "Diarista não encontrada" });
+        console.log(averageRateResult)
+        console.log(average_rate)
 
-            return response.json(diarist);
+        const ratings = services.map(service => {
+            const { user } = service;
+            const { id, rate, description, createdAt} = service.rating;
 
-        } catch (error) {
-            console.log(error);
-            return response.status(500).send(error);
-        }
+            return {
+                id,
+                user,
+                rate,
+                description,
+                createdAt
+            };
+        });
+
+        const {id, name, email, phone, street, number, city, state, daily_rate, note, url_photo} = diarists.dataValues;
+
+        return response.json({
+            id,
+            name,
+            email,
+            phone,
+            street,
+            number,
+            city,
+            average_rate,
+            state,
+            daily_rate,
+            note,
+            url_photo,
+            ratings
+        });
     }
 
     async findServicesByDiaristId(request, response) {

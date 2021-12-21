@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
     );
 
     Diarist.associate = (models) => {
-      Diarist.hasMany(models.Service, { as: "service", foreignKey: "diarist_id" });
+      Diarist.hasMany(models.Service, { as: "services", foreignKey: "diarist_id" });
     }
 
     return Diarist
