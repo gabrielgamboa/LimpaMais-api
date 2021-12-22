@@ -52,7 +52,7 @@ class ServiceController {
         const { id: service_id } = request.params;
 
         try {
-            const updatedService = await Service.update(
+            await Service.update(
                 { status },
                 { where: { id: service_id } }
             );
