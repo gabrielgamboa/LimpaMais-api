@@ -10,6 +10,7 @@ const ratingController = new RatingController();
 
 servicesRoutes.post("/", serviceController.create);
 servicesRoutes.get("/:id", serviceController.findServiceById);
+servicesRoutes.patch("/:id", serviceController.updateServiceStatus);
 
 servicesRoutes.post("/:id/rating", ratingController.create);
 servicesRoutes.get("/:id/rating", ratingController.findRatingByServiceId);

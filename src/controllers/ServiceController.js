@@ -29,12 +29,12 @@ class ServiceController {
                     {
                         model: User,
                         as: "user",
-                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state"]
+                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state"]
                     },
                     {
                         model: Diarist,
                         as: "diarist",
-                        attributes: ["id","name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
                     }
                 ]
             });
@@ -44,6 +44,23 @@ class ServiceController {
 
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    async updateServiceStatus(request, response) {
+        const { status } = request.body;
+        const { id: service_id } = request.params;
+
+        try {
+            const updatedService = await Service.update(
+                { status },
+                { where: { id: service_id } }
+            );
+
+            return response.status(204).send();
+
+        } catch (error) {
+            return response.status(500).send(error);
         }
     }
 }
