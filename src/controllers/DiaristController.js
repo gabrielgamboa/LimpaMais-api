@@ -38,7 +38,7 @@ class DiaristController {
     async find(request, response) {
         const { id: diarist_id } = request.params;
 
-        const diarists = await Diarist.findOne({
+        const diarist = await Diarist.findOne({
             where: { id: diarist_id },
             attributes: { exclude: ["password_hash"] },
             include: [
@@ -59,7 +59,7 @@ class DiaristController {
             ]
         });
 
-        const { services } = diarists;
+        const { services } = diarist;
         
         const [averageRateResult] = await db.sequelize.query(`SELECT AVG(R.rate) as average_rate FROM RATINGS R JOIN SERVICES S ON R.service_id = S.id WHERE S.diarist_id = ${diarist_id}`, { type: QueryTypes.SELECT });
         const { average_rate } = averageRateResult;
