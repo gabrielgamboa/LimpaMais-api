@@ -67,7 +67,6 @@ class UserController {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                phone: user.phone,
                 url_photo: user.url_photo
             });
 

@@ -62,15 +62,13 @@ class DiaristController {
         const { services } = diarist;
         
         const [averageRateResult] = await db.sequelize.query(`SELECT AVG(R.rate) as average_rate FROM RATINGS R JOIN SERVICES S ON R.service_id = S.id WHERE S.diarist_id = ${diarist_id}`, { type: QueryTypes.SELECT });
-        const { average_rate } = averageRateResult;
-
-        console.log(averageRateResult)
-        console.log(average_rate)
+        const average_rate = Number(averageRateResult.average_rate).toFixed(2);
 
         const ratings = services.map(service => {
             const { user } = service;
             const { id, rate, description, createdAt} = service.rating;
 
+            
             return {
                 id,
                 user,
@@ -80,7 +78,7 @@ class DiaristController {
             };
         });
 
-        const {id, name, email, phone, street, number, city, state, daily_rate, note, url_photo} = diarists.dataValues;
+        const {id, name, email, phone, street, number, city, state, daily_rate, note, url_photo} = diarist.dataValues;
 
         return response.json({
             id,
@@ -124,7 +122,7 @@ class DiaristController {
 
     async list(request, response) {
         const { city, sort } = request.query;
-
+        
         try {
             const query = {
                 attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note", "url_photo"]
@@ -134,9 +132,6 @@ class DiaristController {
             if (sort) query.order = [["daily_rate", sort]];
 
             const diarists = await Diarist.findAll(query);
-
-            if (diarists.length === 0)
-                return response.status(404).json({ error: "Não foi encontrado diaristas" });
 
             return response.json(diarists);
 

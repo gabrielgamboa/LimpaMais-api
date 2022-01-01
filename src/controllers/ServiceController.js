@@ -1,14 +1,13 @@
 const { Service, User, Diarist } = require("../models");
 class ServiceController {
     async create(request, response) {
-
-        const { user_id, diarist_id } = request.body;
+        const { user_id, diarist_id, appointment_date } = request.body;
 
         try {
             await Service.create({
                 user_id,
                 diarist_id,
-                appointment_date: new Date(),
+                appointment_date: new Date(appointment_date),
                 status: "created"
             });
 
