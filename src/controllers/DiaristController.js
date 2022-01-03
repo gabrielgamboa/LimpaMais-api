@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const {QueryTypes} = require('sequelize');
+const { QueryTypes } = require('sequelize');
 
 const db = require("../models");
 const { Diarist, User, Service, Rating } = require("../models");
@@ -60,25 +60,28 @@ class DiaristController {
         });
 
         const { services } = diarist;
-        
+
         const [averageRateResult] = await db.sequelize.query(`SELECT AVG(R.rate) as average_rate FROM RATINGS R JOIN SERVICES S ON R.service_id = S.id WHERE S.diarist_id = ${diarist_id}`, { type: QueryTypes.SELECT });
         const average_rate = Number(averageRateResult.average_rate).toFixed(2);
 
         const ratings = services.map(service => {
             const { user } = service;
-            const { id, rate, description, createdAt} = service.rating;
 
-            
-            return {
-                id,
-                user,
-                rate,
-                description,
-                createdAt
-            };
-        });
+            if (service.rating) {
+                const { id: rating_id, rate, description, createdAt } = service.rating;
 
-        const {id, name, email, phone, street, number, city, state, daily_rate, note, url_photo} = diarist.dataValues;
+
+                return {
+                    id: rating_id,
+                    user,
+                    rate,
+                    description,
+                    createdAt
+                };
+            }
+        }).filter(rating => rating);
+
+        const { id, name, email, phone, street, number, city, state, daily_rate, note, url_photo } = diarist.dataValues;
 
         return response.json({
             id,
@@ -122,7 +125,7 @@ class DiaristController {
 
     async list(request, response) {
         const { city, sort } = request.query;
-        
+
         try {
             const query = {
                 attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note", "url_photo"]
