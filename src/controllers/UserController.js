@@ -54,21 +54,39 @@ class UserController {
         try {
             const user = await User.findOne({ where: { email } });
 
-            if (!user)
-                return response.status(404).json({ error: "E-mail ou senha incorretos" });
+            if (user) {
+                const passwordIsValid = await bcrypt.compare(password, user.password_hash);
 
-            const passwordIsValid = await bcrypt.compare(password, user.password_hash);
+                if (!passwordIsValid)
+                    return response.status(404).json({ error: "E-mail ou senha incorretos" });
 
-            if (!passwordIsValid)
-                return response.status(404).json({ error: "E-mail ou senha incorretos" });
+                return response.json({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    url_photo: user.url_photo
+                });
+            }
 
+            //caso não encontrou email vinculado ao usuario, vai buscar na tabela de diaristas
+            const diarist = await Diarist.findOne({ where: { email }});
 
-            return response.json({
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                url_photo: user.url_photo
-            });
+            if (diarist) {
+                const passwordIsValid = await bcrypt.compare(password, diarist.password_hash);
+
+                if (!passwordIsValid)
+                    return response.status(404).json({ error: "E-mail ou senha incorretos" });
+
+                return response.json({
+                    id: diarist.id,
+                    name: diarist.name,
+                    email: diarist.email,
+                    url_photo: diarist.url_photo,
+                    daily_rate: diarist.daily_rate
+                });
+            }
+
+            return response.status(404).json({ error: "E-mail ou senha incorretos" });
 
         } catch (error) {
             return response.status(500).send(error);
@@ -120,7 +138,7 @@ class UserController {
                     {
                         model: Diarist,
                         as: "diarist",
-                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
+                        attributes: ["id", "name", "email", "phone", "street", "url_photo", "number", "city", "state", "daily_rate", "note"]
                     },
                     {
                         model: Rating,

@@ -24,17 +24,13 @@ class ServiceController {
         try {
             const service = await Service.findOne({
                 where: { id },
+                attributes: ["id", "appointment_date", "status"],
                 include: [
                     {
                         model: User,
                         as: "user",
                         attributes: ["id", "name", "email", "phone", "street", "number", "city", "state"]
                     },
-                    {
-                        model: Diarist,
-                        as: "diarist",
-                        attributes: ["id", "name", "email", "phone", "street", "number", "city", "state", "daily_rate", "note"]
-                    }
                 ]
             });
 
